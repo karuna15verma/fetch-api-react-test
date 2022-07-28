@@ -7,6 +7,7 @@ function NewsListener(props) {
     const [value, setValue] = React.useState(null);
     const [apiData, setApiData] = React.useState([]);
     const [allApiData, setAllApiData] = React.useState([]);
+    const [data, setData] = React.useState([]);
 
     const filterApiData = (data) => {
         const arr2 = []
@@ -25,11 +26,10 @@ function NewsListener(props) {
         fetchData();
     }, []);
 
-
-
-
-const top100Films = apiData;
-    const onChangeAutoComplete = (event, newValue) => {
+    const onChangeAutoComplete = (event, newValue, allApiData) => {
+        let arr = [];
+        arr = allApiData.filter(data => data.sectionName == newValue.title);
+        setData(arr);
         if (typeof newValue === 'string') {
             setValue({
               title: newValue,
@@ -52,7 +52,7 @@ const top100Films = apiData;
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                     <Autocomplete
                         value={value}
-                        onChange={(event, newValue) => {onChangeAutoComplete(event, newValue)}}
+                        onChange={(event, newValue) => {onChangeAutoComplete(event, newValue, allApiData)}}
                         filterOptions={(options, params) => {
                             const filtered = filter(options, params);
                             const { inputValue } = params;
@@ -69,7 +69,7 @@ const top100Films = apiData;
                         clearOnBlur
                         handleHomeEndKeys
                         id="free-solo-with-text-demo"
-                        options={top100Films}
+                        options={apiData}
                         getOptionLabel={(option) => {
                             if (typeof option === 'string') {
                             return option;
@@ -87,7 +87,7 @@ const top100Films = apiData;
                         )}
                     />
                     <button
-                        onClick={() => props.getApiData(allApiData)}
+                        onClick={() => props.getApiData(data)}
                     style={{ marginLeft: '10px', height: '40px', width: '120px'}}>Search</button>
                 </div>
             </div>
